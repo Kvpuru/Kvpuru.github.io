@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Will you be my Valentine?</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+  --bg1:#ffd6e7;
+  --bg2:#ffeef6;
+  --card:#ffffffcc;
+  --yes:#ff3b7a;
+  --yesHover:#ff1f68;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
+  font-family:system-ui,sans-serif;
+  overflow:hidden;
+}
+#confettiCanvas{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:9999;
+}
+.card{
+  width:min(720px,92vw);
+  padding:26px 22px;
+  background:var(--card);
+  backdrop-filter:blur(10px);
+  border-radius:22px;
+  text-align:center;
+  box-shadow:0 18px 60px rgba(0,0,0,.15);
+  position:relative;
+  z-index:2;
+}
+h1{font-size:clamp(26px,4vw,44px);margin:12px 0 18px}
+button{
+  padding:16px 24px;
+  font-size:18px;
+  font-weight:800;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.14);
+  user-select:none;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .2s ease;
+}
+#yesBtn{
+  background:var(--yes);
+  color:#fff;
+  position:relative;
+  z-index:5;
+}
+#yesBtn:hover{background:var(--yesHover)}
+
+#noBtn{
+  position:fixed;
+  left:60%;
+  top:60%;
+  background:#e5e7eb;
+  color:#111827;
+  pointer-events:none; /* NEVER CLICKABLE */
+  z-index:4;
+}
+
+.hint{margin-top:10px;font-size:13px;opacity:.7}
+.result{display:none;margin-top:18px;animation:pop .35s ease}
+.fireworks{width:min(380px,90vw);margin:0 auto;display:block}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+
+<body>
+<canvas id="confettiCanvas"></canvas>
+
+<main class="card">
+<h1>Shilpa will you be my valentine?</h1>
+<button id="yesBtn">Yes</button>
+<div class="hint" id="hint">Try catching “No” 😈</div>
+<section class="result" id="result">
+<h2>YAY! 🎉</h2>
+<img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"/>
+</section>
+</main>
+
+<button id="noBtn">No</button>
+
+<script>
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const result=document.getElementById("result");
+const hint=document.getElementById("hint");
+
+/* CONFETTI */
+const confettiCanvas=document.getElementById("confettiCanvas");
+function resizeCanvas(){
+  const dpr=Math.max(1,devicePixelRatio||1);
+  confettiCanvas.width=innerWidth*dpr;
+  confettiCanvas.height=innerHeight*dpr;
+}
+resizeCanvas();
+addEventListener("resize",resizeCanvas);
+
+const confettiInstance=confetti.create(confettiCanvas,{resize:false,useWorker:true});
+function romanticConfettiBurst(){
+  const end=Date.now()+1800;
+  (function frame(){
+    confettiInstance({particleCount:8,spread:70,startVelocity:30,origin:{x:Math.random(),y:Math.random()*0.4}});
+    if(Date.now()<end)requestAnimationFrame(frame);
+  })();
+  setTimeout(()=>confettiInstance({particleCount:300,spread:140,startVelocity:60,origin:{x:.5,y:.6}}),400);
+}
+
+/* YES BUTTON UNLIMITED GROWTH */
+let yesScale=1;
+function growYes(amount=0.12){
+  yesScale+=amount;
+  yesBtn.style.transform=`scale(${yesScale})`;
+}
+
+/* NO BUTTON FULL SCREEN ESCAPE */
+let targetX=window.innerWidth*0.6;
+let targetY=window.innerHeight*0.6;
+let currentX=targetX,currentY=targetY;
+
+function animateNo(){
+  currentX+=(targetX-currentX)*0.15;
+  currentY+=(targetY-currentY)*0.15;
+  noBtn.style.left=currentX+"px";
+  noBtn.style.top=currentY+"px";
+  requestAnimationFrame(animateNo);
+}
+animateNo();
+
+function moveNo(px,py){
+  const b=noBtn.getBoundingClientRect();
+  let dx=(b.left+b.width/2)-px;
+  let dy=(b.top+b.height/2)-py;
+  let mag=Math.hypot(dx,dy)||1;
+  dx/=mag; dy/=mag;
+
+  targetX=Math.min(window.innerWidth-b.width,Math.max(0,b.left+dx*220));
+  targetY=Math.min(window.innerHeight-b.height,Math.max(0,b.top+dy*220));
+  growYes(0.15);
+}
+
+document.addEventListener("pointermove",e=>{
+  const b=noBtn.getBoundingClientRect();
+  const d=Math.hypot((b.left+b.width/2)-e.clientX,(b.top+b.height/2)-e.clientY);
+  if(d<220)moveNo(e.clientX,e.clientY);
+});
+
+/* YES CLICK */
+yesBtn.addEventListener("click",()=>{
+  hint.style.display="none";
+  result.style.display="block";
+  romanticConfettiBurst();
+});
+</script>
+</body>
+</html>
