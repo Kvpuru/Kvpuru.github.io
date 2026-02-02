@@ -11,7 +11,6 @@
 :root {
   --bg1:#ffd6e7;
   --bg2:#ffeef6;
-  --card:#ffffffcc;
   --yes:#ff3b7a;
   --yesHover:#ff1f68;
 }
@@ -26,21 +25,21 @@ body{
   overflow:hidden;
 }
 
-/* CONFETTI CANVAS TOP LAYER */
+/* CONFETTI TOP LAYER */
 #confettiCanvas{
   position:fixed;
   inset:0;
   width:100vw;
   height:100vh;
   pointer-events:none;
-  z-index:20000;
+  z-index:30000;
 }
 
 /* CARD */
 .card{
   width:min(720px,92vw);
   padding:26px 22px;
-  background:var(--card);
+  background:#ffffffcc;
   backdrop-filter:blur(10px);
   border-radius:22px;
   text-align:center;
@@ -68,7 +67,7 @@ h1{font-size:clamp(26px,4vw,44px);margin:12px 0 18px}
 }
 #yesBtn:hover{background:var(--yesHover)}
 
-/* NO BUTTON (FULL SCREEN ESCAPE) */
+/* NO BUTTON */
 #noBtn{
   position:fixed;
   left:60%;
@@ -81,24 +80,32 @@ h1{font-size:clamp(26px,4vw,44px);margin:12px 0 18px}
   background:#e5e7eb;
   color:#111827;
   box-shadow:0 10px 24px rgba(0,0,0,.14);
-  pointer-events:none;
+  pointer-events:auto;
   z-index:4;
 }
 
 .hint{margin-top:10px;font-size:13px;opacity:.7}
 
-/* CELEBRATION RESULT — ABOVE YES BUTTON */
+/* FULLSCREEN CELEBRATION OVERLAY */
 .result{
   display:none;
-  margin-top:18px;
-  animation:pop .35s ease;
-  position:relative;
-  z-index:15000;
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(8px);
+  z-index:25000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  animation:pop .4s ease;
 }
-.fireworks{width:min(380px,90vw);margin:0 auto;display:block}
+
+.fireworks{width:min(380px,90vw);margin-top:10px}
 
 @keyframes pop{
-  from{transform:scale(.96);opacity:0}
+  from{transform:scale(.9);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 </style>
@@ -108,19 +115,18 @@ h1{font-size:clamp(26px,4vw,44px);margin:12px 0 18px}
 <canvas id="confettiCanvas"></canvas>
 
 <main class="card">
-<h1>Shilpa will you be my valentine?</h1>
-
+<h1>nirali will you be my valentine?</h1>
 <button id="yesBtn">Yes</button>
-
-<div class="hint" id="hint">Try catching “No” 😈</div>
-
-<section class="result" id="result">
-<h2>YAY! 🎉</h2>
-<img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"/>
-</section>
+<div class="hint" id="hint">Try clicking “No” 😈</div>
 </main>
 
 <button id="noBtn">No</button>
+
+<!-- CELEBRATION -->
+<div class="result" id="result">
+  <h2>YAY! 🎉</h2>
+  <img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"/>
+</div>
 
 <script>
 const yesBtn=document.getElementById("yesBtn");
@@ -148,21 +154,21 @@ function romanticConfettiBurst(){
   setTimeout(()=>confettiInstance({particleCount:300,spread:140,startVelocity:60,origin:{x:.5,y:.6}}),400);
 }
 
-/* YES BUTTON UNLIMITED GROWTH */
+/* YES UNLIMITED GROWTH */
 let yesScale=1;
-function growYes(amount=0.12){
+function growYes(amount=0.15){
   yesScale+=amount;
   yesBtn.style.transform=`scale(${yesScale})`;
 }
 
-/* NO BUTTON FULL SCREEN ESCAPE */
+/* NO BUTTON ESCAPE ON CLICK ATTEMPT */
 let targetX=window.innerWidth*0.6;
 let targetY=window.innerHeight*0.6;
 let currentX=targetX,currentY=targetY;
 
 function animateNo(){
-  currentX+=(targetX-currentX)*0.15;
-  currentY+=(targetY-currentY)*0.15;
+  currentX+=(targetX-currentX)*0.18;
+  currentY+=(targetY-currentY)*0.18;
   noBtn.style.left=currentX+"px";
   noBtn.style.top=currentY+"px";
   requestAnimationFrame(animateNo);
@@ -176,25 +182,22 @@ function moveNo(px,py){
   let mag=Math.hypot(dx,dy)||1;
   dx/=mag; dy/=mag;
 
-  targetX=Math.min(window.innerWidth-b.width,Math.max(0,b.left+dx*220));
-  targetY=Math.min(window.innerHeight-b.height,Math.max(0,b.top+dy*220));
-  growYes(0.15);
+  targetX=Math.min(innerWidth-b.width,Math.max(0,b.left+dx*250));
+  targetY=Math.min(innerHeight-b.height,Math.max(0,b.top+dy*250));
+  growYes(0.2);
 }
 
-document.addEventListener("pointermove",e=>{
+/* TRIGGER ONLY WHEN TRYING TO CLICK */
+document.addEventListener("pointerdown",e=>{
   const b=noBtn.getBoundingClientRect();
   const d=Math.hypot((b.left+b.width/2)-e.clientX,(b.top+b.height/2)-e.clientY);
-  if(d<220)moveNo(e.clientX,e.clientY);
+  if(d<120) moveNo(e.clientX,e.clientY);
 });
 
-/* YES CLICK — SHOW CELEBRATION ABOVE BUTTON */
+/* YES CLICK */
 yesBtn.addEventListener("click",()=>{
   hint.style.display="none";
-  result.style.display="block";
-
-  // Push Yes behind celebration
-  yesBtn.style.zIndex="1";
-
+  result.style.display="flex";
   romanticConfettiBurst();
 });
 </script>
