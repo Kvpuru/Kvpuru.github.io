@@ -1,205 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Will you be my Valentine?</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Love in Bloom - A Valentine SPA</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero__content">
+          <p class="hero__eyebrow">February 14th</p>
+          <h1>Love in Bloom for Shilpa</h1>
+          <p class="hero__subtext">
+            A colorful, romantic mini-adventure crafted by Kaustubh to unlock a
+            hidden message just for Shilpa.
+          </p>
+          <div class="hero__cta">
+            <button class="btn btn--primary" id="startJourney">
+              Start the journey
+            </button>
+            <button class="btn btn--ghost" id="scrollToPuzzles">
+              Jump to puzzles
+            </button>
+          </div>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <div class="orb orb--pink"></div>
+          <div class="orb orb--peach"></div>
+          <div class="orb orb--lavender"></div>
+          <div class="heart">❤</div>
+        </div>
+      </header>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+      <main>
+        <section class="section section--story" id="journey">
+          <div class="section__content">
+            <h2>The Story</h2>
+            <p>
+              Imagine a garden glowing with lanterns and petals. Every bloom
+              whispers a clue, and every clue is a little love note from
+              Kaustubh to Shilpa. Solve the puzzles below to reveal the final
+              secret hidden inside this Valentine SPA.
+            </p>
+            <div class="ribbons">
+              <span>roses</span>
+              <span>starlight</span>
+              <span>chocolate</span>
+              <span>serendipity</span>
+            </div>
+          </div>
+          <div class="section__card">
+            <h3>How it works</h3>
+            <ol>
+              <li>Unscramble the word of love.</li>
+              <li>Solve the riddle whispered by the moon.</li>
+              <li>Match the heart petals to complete the bouquet.</li>
+            </ol>
+          </div>
+        </section>
 
-<style>
-:root {
-  --bg1:#ffd6e7;
-  --bg2:#ffeef6;
-  --yes:#ff3b7a;
-  --yesHover:#ff1f68;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  min-height:100svh;
-  display:grid;
-  place-items:center;
-  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
-  font-family:system-ui,sans-serif;
-  overflow:hidden;
-}
+        <section class="section section--puzzles" id="puzzles">
+          <div class="section__content">
+            <h2>Valentine Puzzles</h2>
+            <p>Complete all three to unlock the final surprise.</p>
+          </div>
 
-/* CONFETTI TOP LAYER */
-#confettiCanvas{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
-  z-index:30000;
-}
+          <div class="puzzle-grid">
+            <article class="puzzle-card" id="puzzleScramble">
+              <h3>1. Word Scramble</h3>
+              <p class="puzzle-text">
+                Rearrange the letters to form a Valentine word:
+                <strong>V O L E</strong>
+              </p>
+              <label class="input-label" for="scrambleInput"
+                >Your answer</label
+              >
+              <div class="input-row">
+                <input
+                  id="scrambleInput"
+                  type="text"
+                  placeholder="Type here"
+                  autocomplete="off"
+                />
+                <button class="btn btn--secondary" id="checkScramble">
+                  Check
+                </button>
+              </div>
+              <p class="puzzle-feedback" id="scrambleFeedback" role="status"></p>
+            </article>
 
-/* CARD */
-.card{
-  width:min(720px,92vw);
-  padding:26px 22px;
-  background:#ffffffcc;
-  backdrop-filter:blur(10px);
-  border-radius:22px;
-  text-align:center;
-  box-shadow:0 18px 60px rgba(0,0,0,.15);
-  position:relative;
-  z-index:2;
-}
+            <article class="puzzle-card" id="puzzleRiddle">
+              <h3>2. Moonlight Riddle</h3>
+              <div class="riddle-header">
+                <p class="puzzle-text" id="riddlePrompt">
+                  I speak without a mouth and hear without ears. I have nobody,
+                  but I come alive with the wind. What am I?
+                </p>
+                <div class="riddle-nav">
+                  <button
+                    class="btn btn--ghost btn--icon"
+                    id="prevRiddle"
+                    type="button"
+                    aria-label="Previous riddle"
+                  >
+                    ←
+                  </button>
+                  <span class="riddle-count" id="riddleCount">1 / 4</span>
+                  <button
+                    class="btn btn--ghost btn--icon"
+                    id="nextRiddle"
+                    type="button"
+                    aria-label="Next riddle"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+              <label class="input-label" for="riddleInput"
+                >Your answer</label
+              >
+              <div class="input-row">
+                <input
+                  id="riddleInput"
+                  type="text"
+                  placeholder="Type here"
+                  autocomplete="off"
+                />
+                <button class="btn btn--secondary" id="checkRiddle">
+                  Check
+                </button>
+              </div>
+              <p class="puzzle-feedback" id="riddleFeedback" role="status"></p>
+            </article>
 
-h1{font-size:clamp(26px,4vw,44px);margin:12px 0 18px}
+            <article class="puzzle-card puzzle-card--wide" id="puzzleMatch">
+              <h3>3. Heart Petal Match</h3>
+              <p class="puzzle-text">
+                Flip the cards and match all the pairs to complete the bouquet.
+              </p>
+              <div class="match-grid" id="matchGrid" aria-live="polite"></div>
+              <p class="puzzle-feedback" id="matchFeedback" role="status"></p>
+              <button class="btn btn--ghost" id="resetMatch">Reset cards</button>
+            </article>
+          </div>
+        </section>
 
-/* YES BUTTON */
-#yesBtn{
-  padding:16px 24px;
-  font-size:18px;
-  font-weight:800;
-  border-radius:999px;
-  border:none;
-  cursor:pointer;
-  background:var(--yes);
-  color:#fff;
-  box-shadow:0 10px 24px rgba(0,0,0,.14);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .2s ease;
-  position:relative;
-  z-index:5;
-}
-#yesBtn:hover{background:var(--yesHover)}
+        <section class="section section--gallery" id="gallery">
+          <div class="section__content">
+            <h2>Memory Lane</h2>
+            <p>
+              A mini gallery of moments. Swap the photos with your favorites
+              later and keep the captions or write your own.
+            </p>
+          </div>
+          <div class="photo-grid">
+            <figure class="photo-card photo-card--float">
+              <img
+                src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80"
+                alt="Placeholder romantic moment"
+              />
+              <figcaption>Our first spark ✨</figcaption>
+            </figure>
+            <figure class="photo-card photo-card--float photo-card--delay">
+              <img
+                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+                alt="Placeholder sweet moment"
+              />
+              <figcaption>Always my calm</figcaption>
+            </figure>
+            <figure class="photo-card photo-card--float">
+              <img
+                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80"
+                alt="Placeholder joyful moment"
+              />
+              <figcaption>Laughing through everything</figcaption>
+            </figure>
+            <figure class="photo-card photo-card--float photo-card--delay">
+              <img
+                src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=600&q=80"
+                alt="Placeholder cozy moment"
+              />
+              <figcaption>Forever cozy</figcaption>
+            </figure>
+          </div>
+        </section>
 
-/* NO BUTTON */
-#noBtn{
-  position:fixed;
-  left:60%;
-  top:60%;
-  padding:16px 24px;
-  font-size:18px;
-  font-weight:800;
-  border-radius:999px;
-  border:none;
-  background:#e5e7eb;
-  color:#111827;
-  box-shadow:0 10px 24px rgba(0,0,0,.14);
-  pointer-events:auto;
-  z-index:4;
-}
+        <section class="section section--moments" id="moments">
+          <div class="section__content">
+            <h2>Our Moments</h2>
+            <p>
+              A little timeline of magic. Each dot is a memory waiting to glow.
+            </p>
+          </div>
+          <div class="moment-line">
+            <div class="moment-card">
+              <span class="moment-dot"></span>
+              <h3>First Hello</h3>
+              <p>The moment everything felt brighter.</p>
+            </div>
+            <div class="moment-card">
+              <span class="moment-dot"></span>
+              <h3>Shared Laughs</h3>
+              <p>Every inside joke became our song.</p>
+            </div>
+            <div class="moment-card">
+              <span class="moment-dot"></span>
+              <h3>Golden Evenings</h3>
+              <p>Soft sunsets and warm hands.</p>
+            </div>
+          </div>
+        </section>
 
-.hint{margin-top:10px;font-size:13px;opacity:.7}
+        <section class="section section--notes" id="notes">
+          <div class="section__content">
+            <h2>Love Notes</h2>
+            <p>
+              Sweet little cards that dance gently, just like our hearts.
+            </p>
+          </div>
+          <div class="note-grid">
+            <article class="note-card note-card--tilt">
+              <h3>To Shilpa</h3>
+              <p>You make every day feel like spring.</p>
+            </article>
+            <article class="note-card note-card--tilt note-card--delay">
+              <h3>From Kaustubh</h3>
+              <p>I’m grateful for every smile we share.</p>
+            </article>
+            <article class="note-card note-card--tilt">
+              <h3>Our Promise</h3>
+              <p>To keep choosing each other, always.</p>
+            </article>
+          </div>
+        </section>
 
-/* FULLSCREEN CELEBRATION OVERLAY */
-.result{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,0.85);
-  backdrop-filter:blur(8px);
-  z-index:25000;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  animation:pop .4s ease;
-}
+        <section class="section section--final" id="finale">
+          <div class="section__content">
+            <h2>The Final Secret</h2>
+            <p>
+              When every puzzle is solved, a hidden love letter appears. Keep
+              going, it is almost yours.
+            </p>
+          </div>
+          <div class="final-card" aria-live="polite">
+            <div class="lock">
+              <div class="lock__icon" aria-hidden="true">🔒</div>
+              <p id="lockMessage">Solve all puzzles to unlock the letter.</p>
+              <button class="btn btn--primary" id="revealLetter" disabled>
+                Reveal the love letter
+              </button>
+            </div>
+            <div class="letter" id="loveLetter" hidden>
+              <h3>My Dearest Shilpa,</h3>
+              <p>
+                You are the reason my world feels colorful, the melody behind my
+                happiest moments, and the warmth in every quiet evening. Thank
+                you for choosing me, for laughing with me, and for making every
+                day feel like a Valentine. I love you endlessly.
+              </p>
+              <p>
+                I promise to keep showing up with patience, with goofy smiles,
+                and with a heart that chooses you again and again. Here’s to all
+                our little adventures, the quiet comforts, and the dreams we’re
+                building together. You are my favorite person, my safe place,
+                and my forever.
+              </p>
+              <p class="letter__signoff">Forever yours, Kaustubh 💖</p>
+            </div>
+          </div>
+        </section>
+      </main>
 
-.fireworks{width:min(380px,90vw);margin-top:10px}
+      <footer class="footer">
+        <p>
+          Made with love ❤ for Shilpa, by
+          <button class="link-button" id="openProfile" type="button">
+            Kaustubh
+          </button>
+          .
+        </p>
+      </footer>
+    </div>
 
-@keyframes pop{
-  from{transform:scale(.9);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-</style>
-</head>
+    <div class="modal" id="profileModal" aria-hidden="true">
+      <div class="modal__overlay" id="closeProfile"></div>
+      <div
+        class="modal__content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="profileTitle"
+      >
+        <button class="modal__close" id="closeProfileButton" type="button">
+          ✕
+        </button>
+        <div class="modal__body">
+          <div class="modal__photo">
+            <img
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80"
+              alt="Kaustubh smiling"
+            />
+          </div>
+          <div class="modal__text">
+            <p class="modal__eyebrow">Yes, this idiot 😄</p>
+            <h3 id="profileTitle">Kaustubh, 26</h3>
+            <p>
+              The guy who fell in love with you and still blushes every time you
+              smile. He’s grateful for every moment and wants to make you feel
+              cherished, today and always.
+            </p>
+            <div class="modal__tags">
+              <span>Passion: Shilpa</span>
+              <span>Love language: Small surprises</span>
+              <span>Promise: Forever your cheerleader</span>
+              <span>Favorite vibe: You + me + sunsets</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<body>
-<canvas id="confettiCanvas"></canvas>
-
-<main class="card">
-<h1>nirali will you be my valentine?</h1>
-<button id="yesBtn">Yes</button>
-<div class="hint" id="hint">Try clicking “No” 😈</div>
-</main>
-
-<button id="noBtn">No</button>
-
-<!-- CELEBRATION -->
-<div class="result" id="result">
-  <h2>YAY! 🎉</h2>
-  <img class="fireworks" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"/>
-</div>
-
-<script>
-const yesBtn=document.getElementById("yesBtn");
-const noBtn=document.getElementById("noBtn");
-const result=document.getElementById("result");
-const hint=document.getElementById("hint");
-
-/* CONFETTI */
-const confettiCanvas=document.getElementById("confettiCanvas");
-function resizeCanvas(){
-  const dpr=Math.max(1,devicePixelRatio||1);
-  confettiCanvas.width=innerWidth*dpr;
-  confettiCanvas.height=innerHeight*dpr;
-}
-resizeCanvas();
-addEventListener("resize",resizeCanvas);
-
-const confettiInstance=confetti.create(confettiCanvas,{resize:false,useWorker:true});
-function romanticConfettiBurst(){
-  const end=Date.now()+1800;
-  (function frame(){
-    confettiInstance({particleCount:8,spread:70,startVelocity:30,origin:{x:Math.random(),y:Math.random()*0.4}});
-    if(Date.now()<end)requestAnimationFrame(frame);
-  })();
-  setTimeout(()=>confettiInstance({particleCount:300,spread:140,startVelocity:60,origin:{x:.5,y:.6}}),400);
-}
-
-/* YES UNLIMITED GROWTH */
-let yesScale=1;
-function growYes(amount=0.15){
-  yesScale+=amount;
-  yesBtn.style.transform=`scale(${yesScale})`;
-}
-
-/* NO BUTTON ESCAPE ON CLICK ATTEMPT */
-let targetX=window.innerWidth*0.6;
-let targetY=window.innerHeight*0.6;
-let currentX=targetX,currentY=targetY;
-
-function animateNo(){
-  currentX+=(targetX-currentX)*0.18;
-  currentY+=(targetY-currentY)*0.18;
-  noBtn.style.left=currentX+"px";
-  noBtn.style.top=currentY+"px";
-  requestAnimationFrame(animateNo);
-}
-animateNo();
-
-function moveNo(px,py){
-  const b=noBtn.getBoundingClientRect();
-  let dx=(b.left+b.width/2)-px;
-  let dy=(b.top+b.height/2)-py;
-  let mag=Math.hypot(dx,dy)||1;
-  dx/=mag; dy/=mag;
-
-  targetX=Math.min(innerWidth-b.width,Math.max(0,b.left+dx*250));
-  targetY=Math.min(innerHeight-b.height,Math.max(0,b.top+dy*250));
-  growYes(0.2);
-}
-
-/* TRIGGER ONLY WHEN TRYING TO CLICK */
-document.addEventListener("pointerdown",e=>{
-  const b=noBtn.getBoundingClientRect();
-  const d=Math.hypot((b.left+b.width/2)-e.clientX,(b.top+b.height/2)-e.clientY);
-  if(d<120) moveNo(e.clientX,e.clientY);
-});
-
-/* YES CLICK */
-yesBtn.addEventListener("click",()=>{
-  hint.style.display="none";
-  result.style.display="flex";
-  romanticConfettiBurst();
-});
-</script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
